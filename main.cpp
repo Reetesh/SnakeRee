@@ -1,17 +1,16 @@
 #include <SFML/Graphics.hpp>
-#include <stdlib.h>
-#include <time.h>
 #include "snakeBody.h"
 #include "food.h"
 
 int main()
 {
-	srand(time(NULL));
+
     sf::Int32 score = 1;
 	float width=10.0, height=10.0;
 	float startX = 50, startY = 50;
 	int windowX = 200, windowY = 200;
-	int randX, randY;
+	int *foodXY;
+
 	
 	sf::FloatRect headBox, bodyBox, foodBox;
 	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "My Window!");
@@ -25,11 +24,8 @@ int main()
 	body.bodyPiece.setFillColor(sf::Color::Red);
 	body.bodyPiece.setPosition(startX,startY);
 
-	randX = rand() % (windowX);// - (int) ceil(width));
-	srand(time(NULL));
-	randY = rand() % (windowY);// - (int) ceil(height));
-	nom.foodPiece.setPosition(randX, randY);
-	nom.foodPiece.setFillColor(sf::Color::Blue);
+	foodXY	 = nom.placeFoodPiece(windowX, windowY);
+	
 
     while (window.isOpen())
     {
