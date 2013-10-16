@@ -5,7 +5,7 @@ class food
 public:
 	sf::RectangleShape foodPiece;
 	food(float width, float height);
-	int* placeFoodPiece(int, int);
+	void placeFoodPiece(int, int);
 	food(void);
 	~food(void);
 };

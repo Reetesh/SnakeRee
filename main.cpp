@@ -6,6 +6,7 @@ int main()
 {
 
     sf::Int32 score = 1;
+	sf::Vector2f currPos;
 	float width=10.0, height=10.0;
 	float startX = 50, startY = 50;
 	int windowX = 200, windowY = 200;
@@ -14,7 +15,9 @@ int main()
 	
 	sf::FloatRect headBox, bodyBox, foodBox;
 	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "My Window!");
-	sf::RectangleShape head(sf::Vector2f(width, height));	
+	sf::RectangleShape head(sf::Vector2f(width, height));
+	sf::FloatRect boundary(sf::Vector2f(0,0), sf::Vector2f(windowX-30, windowY-30));
+
 	snakeBody body(width, height);
 	food nom(width, height);
 	
@@ -24,9 +27,8 @@ int main()
 	body.bodyPiece.setFillColor(sf::Color::Red);
 	body.bodyPiece.setPosition(startX,startY);
 
-	foodXY	 = nom.placeFoodPiece(windowX, windowY);
+	nom.placeFoodPiece(windowX, windowY);
 	
-
     while (window.isOpen())
     {
         sf::Event event;
@@ -45,7 +47,14 @@ int main()
 		window.draw(body.bodyPiece);	
         window.draw(head);	
 		window.draw(nom.foodPiece);
-		
+		// see if head intersects with the window borders
+		//currPos = head.getPosition();
+		if( boundary.intersects(head.getGlobalBounds()) )
+		{
+			head.move(1,0);	
+			_sleep(10);
+
+		}
         window.display();
     }
 

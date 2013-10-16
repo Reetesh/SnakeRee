@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int* food::placeFoodPiece(int windowX, int windowY)
+void food::placeFoodPiece(int windowX, int windowY)
 {
 	int randX, randY;
 	
@@ -11,8 +11,8 @@ int* food::placeFoodPiece(int windowX, int windowY)
 	srand(time(NULL));
 	randY = (rand()*455) % (windowY);// - (int) ceil(height));
 
-	this.foodPiece.setPosition(randX, randY);
-	this.foodPiece.setFillColor(sf::Color::Blue);
+	foodPiece.setPosition(randX, randY);
+	foodPiece.setFillColor(sf::Color::Blue);
 }
 
 food::food(float width, float height)
