@@ -11,8 +11,14 @@ int main()
 	float startX = 50, startY = 50;
 	int windowX = 200, windowY = 200;
 	int *foodXY;
+	int t = 0;
+	int dir[4][2] = {
+		{1,0},
+		{0,1},
+		{-1,0},
+		{0,-1}
+	};
 
-	
 	sf::FloatRect headBox, bodyBox, foodBox;
 	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "My Window!");
 	sf::RectangleShape head(sf::Vector2f(width, height));
@@ -24,9 +30,10 @@ int main()
 	head.setPosition(startX, startY);
     head.setFillColor(sf::Color::Green);
 
-	body.bodyPiece.setFillColor(sf::Color::Red);
-	body.bodyPiece.setPosition(startX,startY);
-
+	
+	body.head->piece->setPosition(startX,startY);
+	body.head->piece->setFillColor(sf::Color::Red);
+	
 	nom.placeFoodPiece(windowX, windowY);
 	
     while (window.isOpen())
@@ -36,6 +43,8 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+			if (event.type == sf::Event::MouseButtonReleased)
+                t = (t + 1) % 4;
         }
 
         window.clear();
@@ -44,16 +53,22 @@ int main()
 		//bodyBox	= body.getGlobalBounds();
 
 		//if(headBox.intersects(bodyBox)
-		window.draw(body.bodyPiece);	
+		window.draw(*body.head->piece);	
         window.draw(head);	
 		window.draw(nom.foodPiece);
 		// see if head intersects with the window borders
 		//currPos = head.getPosition();
-		if( boundary.intersects(head.getGlobalBounds()) )
+		if( boundary.intersects(headBox) )
 		{
-			head.move(1,0);	
+     	    head.move(dir[t][0], dir[t][1]);
+			body.head->piece->move(dir[t][0],dir[t][1]);
 			_sleep(10);
 
+		}
+		else
+		{
+			head.setPosition(startX, startY);
+			body.head->piece->setPosition(startX,startY);
 		}
         window.display();
     }
