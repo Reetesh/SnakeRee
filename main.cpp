@@ -14,12 +14,11 @@ int main()
 	int *foodXY;
 	int t = 0;
 	int dir[4][2] = {
-		{1,0},
-		{0,1},
-		{-1,0},
-		{0,-1}
-	};
-	std::deque<int> moveDeck;
+		{blockSize,0},
+		{0,blockSize},
+		{-blockSize,0},
+		{0,-blockSize}
+	};	
 	
 
 	sf::FloatRect headBox, bodyBox, foodBox;
@@ -32,7 +31,10 @@ int main()
 	sf::RectangleShape *head  = snake.body.front();
 	std::list<sf::RectangleShape*>::iterator snaker;
 	
-	
+	std::deque<int> moveDeck;
+	moveDeck.push_back(0);
+	moveDeck.push_back(0);
+	moveDeck.push_back(0);
 	
 	nom.placeFoodPiece(windowX, windowY);
 	
@@ -59,14 +61,16 @@ int main()
 		if( boundary.intersects(headBox) )
 		{
 			moveDeck.push_front(t);
-
-     	    
+			std::deque<int>::iterator dp = moveDeck.begin();
+			
 			for( snaker = snake.body.begin(); snaker != snake.body.end(); ++snaker)
-			{
-				(*snaker)->move(dir[t][0],dir[t][1]);
+			{	
+				(*snaker)->move(dir[*dp][0],dir[*dp][1]);
 				window.draw(**snaker);
+				dp++;
 			}
-			_sleep(10);
+			_sleep(100);
+			moveDeck.pop_back();
 		}
 		else
 		{
