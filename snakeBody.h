@@ -1,21 +1,16 @@
 #pragma once
 #include "e:\programming\sfml-2.1\include\sfml\graphics\rectangleshape.hpp"
 #include "e:\programming\sfml-2.1\include\sfml\graphics\transformable.hpp"
+#include <list>
 class snakeBody
 {
 public:
-	struct body {
-		sf::RectangleShape *piece;
-		struct body *next;
-	};
-	struct body *head;
-	struct body *tail;
+	std::list<sf::RectangleShape *> body;
 	
 	snakeBody(float width, float height);
-	snakeBody(void);
 	~snakeBody(void);
 
-	struct body* addPiece(void);
+	void addPiece(void);
 	
 	void setWidth(float width);
 	void setHeight(float height);

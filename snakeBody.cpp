@@ -6,22 +6,20 @@ snakeBody::snakeBody(float width, float height)
 	setWidth(width);
 	setHeight(height);
 	setLength(0);
-	head = addPiece();
+	addPiece();
 	
 }
 
-snakeBody::body* snakeBody::addPiece(void)
+void snakeBody::addPiece(void)
 {
-	struct body *piece = new struct body;
-	sf::RectangleShape  *block = new sf::RectangleShape;
+	sf::RectangleShape *block = new sf::RectangleShape;
 	*block = sf::RectangleShape(sf::Vector2f(getWidth(), getHeight()));
 	block->setScale(-1,1);
 	
-	piece->piece = block;
-	piece->next = NULL;
-	setLength(getLength()+1);
-	tail  = piece;
-	return piece;
+	body.push_back(block);
+	
+	setLength(getLength()+1);	
+
 }
 
 void snakeBody::setWidth(float width)
@@ -52,9 +50,8 @@ int snakeBody::getLength()
 	return this->length;
 }
 
-/*
-** Write Cleanup of body
+/* TODO Write Cleanup of body */
 snakeBody::~snakeBody(void)
 {
 }
-*/
+
