@@ -8,7 +8,7 @@ int main()
 
     sf::Int32 score = 1;
 	sf::Vector2f currPos;
-	float blockWidth=10.0, blockHeight=10.0;
+	float blockSize=10.0;
 	float startX = 50, startY = 50;
 	int windowX = 200, windowY = 200;
 	int *foodXY;
@@ -23,20 +23,16 @@ int main()
 	
 
 	sf::FloatRect headBox, bodyBox, foodBox;
-	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "My Window!");
-	sf::RectangleShape head(sf::Vector2f(blockWidth, blockHeight));
-	sf::FloatRect boundary(sf::Vector2f(0,0), sf::Vector2f(windowX-blockWidth, windowY-blockHeight));
+	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "ReeSnake!");
+	
+	sf::FloatRect boundary(sf::Vector2f(0,0), sf::Vector2f(windowX-blockSize, windowY-blockSize));
 
-	snakeBody snake(blockWidth, blockHeight);
-	food nom(blockWidth, blockHeight);
-
+	snakeBody snake(blockSize, startX, startY);
+	food nom(blockSize, blockSize);
+	sf::RectangleShape *head  = snake.body.front();
 	std::list<sf::RectangleShape*>::iterator snaker;
 	
-	head.setPosition(startX, startY);
-    head.setFillColor(sf::Color::Green);
 	
-	snake.body.front()->setPosition(startX,startY);
-	snake.body.front()->setFillColor(sf::Color::Red);
 	
 	nom.placeFoodPiece(windowX, windowY);
 	
@@ -53,12 +49,10 @@ int main()
 
         window.clear();
 		// All Draw Stuff here
-		headBox = head.getGlobalBounds();
+		headBox = head->getGlobalBounds();
 		//bodyBox	= body.getGlobalBounds();
 
 		//if(headBox.intersects(bodyBox)
-		window.draw(*snake.body.front());	
-        window.draw(head);	
 		window.draw(nom.foodPiece);
 		// see if head intersects with the window borders
 		//currPos = head.getPosition();
@@ -66,16 +60,16 @@ int main()
 		{
 			moveDeck.push_front(t);
 
-     	    head.move(dir[t][0], dir[t][1]);
+     	    
 			for( snaker = snake.body.begin(); snaker != snake.body.end(); ++snaker)
 			{
 				(*snaker)->move(dir[t][0],dir[t][1]);
+				window.draw(**snaker);
 			}
 			_sleep(10);
 		}
 		else
 		{
-			head.setPosition(startX, startY);
 			snake.body.front()->setPosition(startX,startY);
 		}
         window.display();

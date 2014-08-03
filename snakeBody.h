@@ -6,23 +6,21 @@ class snakeBody
 {
 public:
 	std::list<sf::RectangleShape *> body;
+	sf::RectangleShape *head;
 	
-	snakeBody(float width, float height);
+	snakeBody(float size, float startX, float startY);
 	~snakeBody(void);
 
-	void addPiece(void);
+	void addPiece(int direction);
 	
-	void setWidth(float width);
-	void setHeight(float height);
-	void setLength(int lenght);
+	void setSize(float size);
+	void setLength(int length);
 	
-	float getHeight();
-	float getWidth();
+	float getSize();	
 	int getLength();
 
 private:
-	float width;
-	float height;
+	float size;
 	int length;
 	
 
