@@ -45,8 +45,12 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-			if (event.type == sf::Event::MouseButtonReleased)
-                t = (t + 1) % 4;
+			if (event.type == sf::Event::MouseButtonReleased){
+				snake.addPiece(moveDeck.back());
+				moveDeck.push_back(t);
+				t = (t + 1) % 4;
+				
+			}
         }
 
         window.clear();
