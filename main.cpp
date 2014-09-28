@@ -1,7 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "snakeBody.h"
 #include "food.h"
-#include <deque> 
+
+#define BLOCK_SIZE 10;
+#define START_X 50;
+#define START_Y 50;
+#define WINDOW_X 200;
+#define WINDOW_Y 200;
 
 int main()
 {
@@ -9,35 +14,32 @@ int main()
 	// body is a deck of pieces.
 
     sf::Int32 score = 1;
-	sf::Vector2f currPos;
-	float blockSize=10.0;
-	float startX = 50, startY = 50;
-	int windowX = 200, windowY = 200;
-	int *foodXY;
-	int t = 0;
-	int dir[4][2] = {
+	
+	float blockSize= BLOCK_SIZE;
+	float startX = START_X;
+	float startY = START_Y;
+	int windowX = WINDOW_X;
+	int windowY = WINDOW_Y;
+
+	int dir = 0;	
+	int directions[4][2] = {
 		{blockSize,0},
 		{0,blockSize},
 		{-blockSize,0},
 		{0,-blockSize}
 	};	
 	
-
 	sf::FloatRect headBox, bodyBox, foodBox;
 	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "ReeSnake!");
 	
 	sf::FloatRect boundary(sf::Vector2f(0,0), sf::Vector2f(windowX-blockSize, windowY-blockSize));
 
-	snakeBody snake(blockSize, startX, startY);
-	food nom(blockSize, blockSize);
-	sf::RectangleShape *head  = snake.body.front();
+	snakeBody snake(blockSize, startX, startY);	
+	sf::RectangleShape *head = snake.body.front();
+	sf::RectangleShape *neck = snake.body.back();
 	std::list<sf::RectangleShape*>::iterator snaker;
 	
-	std::deque<int> moveDeck;
-	moveDeck.push_back(0);
-	moveDeck.push_back(0);
-	moveDeck.push_back(0);
-	
+	food nom(blockSize, blockSize);
 	nom.placeFoodPiece(windowX, windowY);
 	
     while (window.isOpen())
@@ -47,46 +49,55 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-			if (event.type == sf::Event::MouseButtonReleased){
-				t = (t + 1) % 4;	
+			if (event.type == sf::Event::MouseButtonPressed){
+				dir = (dir + 1) % 4;	
 			}
         }
         window.clear();
-		// All Draw Stuff here
+		/* All Draw Stuff here */
+		
 		headBox = head->getGlobalBounds();
-		
-		//bodyBox	= body.getGlobalBounds();
-		//if(headBox.intersects(bodyBox)
-		
 		window.draw(nom.foodPiece);
-		//see if head intersects with the window borders
-		//currPos = head.getPosition();
 		
+		//see if snake's head is inside the window boundary
 		if( boundary.intersects(headBox) )
 		{
-			
+			//if head touches food piece
 			if( headBox.intersects(nom.foodPiece.getGlobalBounds() )) {
-				snake.addPiece(moveDeck.back());
-				moveDeck.push_back(t);
+				//add a piece to snake, grow in lenght
+				snake.addPiece(snake.moveDeck.back());
+				snake.moveDeck.push_back(dir);
+				
+				//place food piece some other place.
 				nom.placeFoodPiece(windowX, windowY);
+				
+				//increase score
+				score++;
 			}
 
-			moveDeck.push_front(t);
-			std::deque<int>::iterator dp = moveDeck.begin();
-			
+			snake.moveDeck.push_front(dir);
+			std::deque<int>::iterator dp = snake.moveDeck.begin();
+			//got through each piece of snake's body
 			for( snaker = snake.body.begin(); snaker != snake.body.end(); ++snaker)
 			{	
-				(*snaker)->move(dir[*dp][0],dir[*dp][1]);
+				//move snake according to the moveDeck
+				(*snaker)->move(directions[*dp][0],directions[*dp][1]);
 				window.draw(**snaker);
 				dp++;
+				//if snake tries to eat itself, it dies.
+				if( (*snaker != head) && (*snaker != neck) && headBox.intersects((*snaker)->getGlobalBounds()) ) {
+					exit(-1);
+				}
 			}
 			_sleep(100);
-			moveDeck.pop_back();
+			snake.moveDeck.pop_back();
 		}
+		//snake dies if it goes outside the boundary.
 		else
 		{
-			snake.body.front()->setPosition(startX,startY);
+			exit(-1);
 		}
+
         window.display();
     }
 

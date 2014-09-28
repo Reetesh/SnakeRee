@@ -2,11 +2,14 @@
 #include "e:\programming\sfml-2.1\include\sfml\graphics\rectangleshape.hpp"
 #include "e:\programming\sfml-2.1\include\sfml\graphics\transformable.hpp"
 #include <list>
+#include <deque>
+
 class snakeBody
 {
 public:
 	std::list<sf::RectangleShape *> body;
 	sf::RectangleShape *head;
+	std::deque<int> moveDeck;
 	
 	snakeBody(float size, float startX, float startY);
 	~snakeBody(void);

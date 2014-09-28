@@ -10,7 +10,8 @@ snakeBody::snakeBody(float size, float startX, float startY)
 	body.push_back(head);
 	setLength(1);
 	addPiece(0);
-	addPiece(0);
+	moveDeck.push_back(0);
+	moveDeck.push_back(0);
 }
 
 void snakeBody::addPiece(int direction)
