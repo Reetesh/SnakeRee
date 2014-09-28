@@ -5,6 +5,8 @@
 
 int main()
 {
+	// Using moveDeck to move each body piece individually.
+	// body is a deck of pieces.
 
     sf::Int32 score = 1;
 	sf::Vector2f currPos;
@@ -46,24 +48,29 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 			if (event.type == sf::Event::MouseButtonReleased){
-				snake.addPiece(moveDeck.back());
-				moveDeck.push_back(t);
-				t = (t + 1) % 4;
-				
+				t = (t + 1) % 4;	
 			}
         }
-
         window.clear();
 		// All Draw Stuff here
 		headBox = head->getGlobalBounds();
+		
 		//bodyBox	= body.getGlobalBounds();
-
 		//if(headBox.intersects(bodyBox)
+		
 		window.draw(nom.foodPiece);
-		// see if head intersects with the window borders
+		//see if head intersects with the window borders
 		//currPos = head.getPosition();
+		
 		if( boundary.intersects(headBox) )
 		{
+			
+			if( headBox.intersects(nom.foodPiece.getGlobalBounds() )) {
+				snake.addPiece(moveDeck.back());
+				moveDeck.push_back(t);
+				nom.placeFoodPiece(windowX, windowY);
+			}
+
 			moveDeck.push_front(t);
 			std::deque<int>::iterator dp = moveDeck.begin();
 			
