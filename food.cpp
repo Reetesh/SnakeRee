@@ -12,7 +12,7 @@ void food::placeFoodPiece(int windowX, int windowY)
 	randY = (rand()*455) % (windowY);// - (int) ceil(height));
 
 	foodPiece.setPosition(randX, randY);
-	foodPiece.setFillColor(sf::Color::Blue);
+	foodPiece.setFillColor(sf::Color::Color(rand()*255,rand()*255, 255));
 }
 
 food::food(float width, float height)

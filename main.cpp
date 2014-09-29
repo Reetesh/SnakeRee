@@ -5,15 +5,16 @@
 #define BLOCK_SIZE 10;
 #define START_X 50;
 #define START_Y 50;
-#define WINDOW_X 200;
-#define WINDOW_Y 200;
+#define WINDOW_X 400;
+#define WINDOW_Y 300;
 
 int main()
 {
 	// Using moveDeck to move each body piece individually.
 	// body is a deck of pieces.
 
-    sf::Int32 score = 1;
+    int score = 1;
+	bool isGameOver = false;
 	
 	float blockSize= BLOCK_SIZE;
 	float startX = START_X;
@@ -29,6 +30,17 @@ int main()
 		{0,-blockSize}
 	};	
 	
+	sf::Font verdana;
+	verdana.loadFromFile("verdana.ttf");
+	
+	sf::Text scoreText("Score: ", verdana, 20);
+	scoreText.setPosition(10,10);
+	scoreText.setColor(sf::Color::White);
+
+	sf::Text gameOverText("Game Over!", verdana, 20);
+	gameOverText.setFont(verdana);
+	gameOverText.setPosition(windowX/2, windowY/2);
+
 	sf::FloatRect headBox, bodyBox, foodBox;
 	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "ReeSnake!");
 	
@@ -58,9 +70,10 @@ int main()
 		
 		headBox = head->getGlobalBounds();
 		window.draw(nom.foodPiece);
-		
+		scoreText.setString("Score: " + std::to_string(score) );
+		window.draw(scoreText);
 		//see if snake's head is inside the window boundary
-		if( boundary.intersects(headBox) )
+		if( !isGameOver && boundary.intersects(headBox) )
 		{
 			//if head touches food piece
 			if( headBox.intersects(nom.foodPiece.getGlobalBounds() )) {
@@ -86,18 +99,18 @@ int main()
 				dp++;
 				//if snake tries to eat itself, it dies.
 				if( (*snaker != head) && (*snaker != neck) && headBox.intersects((*snaker)->getGlobalBounds()) ) {
-					exit(-1);
+					isGameOver = true;
 				}
 			}
-			_sleep(100);
 			snake.moveDeck.pop_back();
 		}
 		//snake dies if it goes outside the boundary.
-		else
+		else 
 		{
-			exit(-1);
+			gameOverText.setColor(sf::Color::Color(rand()*255,rand()*255,rand()*255));
+			window.draw(gameOverText);
 		}
-
+		_sleep(100);
         window.display();
     }
 

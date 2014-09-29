@@ -35,7 +35,8 @@ void snakeBody::addPiece(int direction)
 			break;
 	}
 
-	block->setFillColor(sf::Color::Red);
+	sf::Color pieceColor(rand()*255, rand()*255, rand()*255);
+	block->setFillColor(pieceColor);
 	
 	body.push_back(block);
 	setLength(getLength()+1);	
