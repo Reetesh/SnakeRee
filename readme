@@ -1,0 +1,93 @@
+##################    SnakeRee    ##################
+
+Started off working on this as a test to see if I could make a game on my own. Just sitting down and working on it was the hardest part, took me exactly a year to reach start to finish.
+
+Made a commit at least once every time I sat and wrote the code. So that is almost 10 sittings to get it done, haha. 
+
+I will try to explain the major algorithmic challenges I worked on when making this.
+
+"Snake's Body"
+
+The basic concept is that the snake's body increases in length when it eats a food piece. So I had to design the snake's body in such a way that I could just add pieces to it and iterate through them all. 
+
+--------------------------------------------
+std::list<sf::RectangleShape *> body
+--------------------------------------------
+
+the body is basically a list of pointers which points to each block that constitues the body.
+This way, each piece can have it's own characteristic. Each of them has a randomly generated color right now.
+
+"Snake's movement"
+When the snake turns, it should turn such that each body piece after the head should follow the head. The whole body should not move in the same direction at the same time. 
+
+--------------------------------------------
+std::deque<int> moveDeck;
+--------------------------------------------
+
+moveDeck is a deque that consits of the direction in which the next piece should move. It will be of the same lenght as the body, and each position in moveDeck will correspond to respective piece in body.
+
+Example of snake's movement. Visually displaying moveDeck values.
+
+current movement: 
+  RRRRRD
+
+change direction:
+   RRRRD
+       D
+< 1 frame later >
+    RRRD
+       D
+	   D
+< 4 frames later >
+	   D
+	   D
+	   D
+	   D
+	   D
+	   D
+
+Whenever the direction of head is changed, the moveDeck values propogate from head to the tail at every frame.
+At the end of every frame the current direction of head is pushed to the front of the deque and the back is popped. This helps in maintaining the length of moveDeck same as the snakeBody and helps in chain propogation of movement.
+i.e., it ensures that every piece follows the one in front of it.
+
+"Growth of Snake"
+
+When the snake eats a food piece, the length of the snake should increase. To achieve this I wrote snakeBody::addPiece()
+
+--------------------------------------------
+snakeBody::addPiece(int direction)
+--------------------------------------------
+
+adding a new piece of snake is easy but the trick was in figuring out how it should correspond to the current movement of the snake.
+
+Example of eating food and adding new tail piece:
+
+ RRRRD
+   FLD
+
+< head is moving L and eats F>
+ RRRRD
+   LLD
+
+<the new piece added is moving to the Right and is added to the Left of the current tail>
+ 
+This explains that basically the information that that is required when adding a new piece is the direction at which the tail is travelling.
+If the tail is travelling to the right, the new tail is added to the left of it. If is going down, the tail is added above it. 
+In addition to it, the new tail will move in the same direction as the current tail, so
+
+--------------------------------------------
+snake.addPiece(snake.moveDeck.back());
+snake.moveDeck.push_back(snake.moveDeck.back());
+--------------------------------------------
+
+is the right way to add a new piece. As seen in the moveDeck diagram above, the tail is added with the same moveDeck value as the previous tail, 
+and it's relative position is opposite to the direction where the previous tail was moving.
+
+
+##################    Conlusion    ##################
+
+These were the main thinking pieces of the puzzle, rest was making use of SFML library which is pretty straight forward and simple to use. Checkout SFML at http://www.sfml-dev.org/index.php
+
+Took me a while but it is done. My first simple game.
+
+Download the exe here: https://www.dropbox.com/s/vn2lamn1kkzhlno/SnakeRee.zip?dl=0
